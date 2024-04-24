@@ -2,4 +2,6 @@
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
+    kotlin("kapt") version "1.9.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.20"
 }
