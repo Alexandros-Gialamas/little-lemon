@@ -43,7 +43,7 @@ fun MiddlePanel(
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, top = 4.dp)
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
         )
 
         Row(
@@ -79,7 +79,7 @@ fun MiddlePanel(
             )
         }
 
-        Divider(thickness = 1.dp, color = Color.Gray)
+        Divider(thickness = 1.dp, color = LittleLemonColor.charcoal, modifier = Modifier.padding(top = 4.dp))
     }
 }
 
@@ -106,7 +106,7 @@ fun FilterButton(
         colors = ButtonDefaults.buttonColors(
             containerColor =
             if (!buttonFocused) buttonOff else buttonOn),
-        border = BorderStroke(1.dp, Color.Gray),
+        border = BorderStroke(1.dp, LittleLemonColor.charcoal),
         modifier = Modifier
 
     ) {

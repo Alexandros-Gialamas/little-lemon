@@ -1,6 +1,7 @@
 package com.alexandros.p.gialamas.littlelemon.screens
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -25,6 +28,7 @@ import com.alexandros.p.gialamas.littlelemon.screens.home.TopAppBar
 import com.alexandros.p.gialamas.littlelemon.screens.home.UpperPanel
 import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonTheme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -39,17 +43,26 @@ fun Home(
     val menuApi = MenuApi()
     val database = MenuDatabase.getDatabase(context)
     val databaseMenuItems by database.menuDao().getMenu().observeAsState(emptyList())
+    val searchPhraseFlow = remember { MutableStateFlow(TextFieldValue("")) }
     var menuItems by remember { mutableStateOf(databaseMenuItems) }
+//        menuItems.sortedBy { it.title }.filter { it.title.contains(searchPhrase.text, ignoreCase = true) }
 
 
 
-    var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
 
     Column {
         TopAppBar(navController)
-        UpperPanel(searchPhrase = searchPhrase)
-        MiddlePanel(selectedCategories = selectedCategories, setSelectedCategories = setSelectedCategories)
-        LowerPanel(navController = navController, menuItems = menuItems, selectedCategories = selectedCategories)
+        UpperPanel(searchPhraseFlow = searchPhraseFlow)
+        MiddlePanel(
+            selectedCategories = selectedCategories,
+            setSelectedCategories = setSelectedCategories
+        )
+        LowerPanel(
+            navController = navController,
+            menuItems = menuItems,
+            selectedCategories = selectedCategories,
+            searchPhraseFlow = searchPhraseFlow
+        )
     }
 
 
@@ -63,12 +76,6 @@ fun Home(
             }
         }
     }
-
-//    LaunchedEffect(searchPhrase) {
-//        menuItems = databaseMenuItems.filter {
-//            it.title.contains(searchPhrase.text, ignoreCase = true)
-//        }
-
 }
 
 

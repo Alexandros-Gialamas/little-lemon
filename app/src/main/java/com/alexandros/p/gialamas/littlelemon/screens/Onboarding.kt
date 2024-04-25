@@ -5,35 +5,42 @@ import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.navigation.NavController
 import com.alexandros.p.gialamas.littlelemon.DestinationsImpl
 import com.alexandros.p.gialamas.littlelemon.R
 import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonColor
-import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonTheme
 
 
 @Composable
 fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferences, context: Context){
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -75,26 +82,27 @@ fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferen
 
         MyLabel(text = "First name")
 
-        var firstName = myTextField(label = "First Name")
+        var firstName = myTextField(label = "First Name", maxChars = 16)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MyLabel(text = "Last name")
 
-        var lastName = myTextField(label = "Last Name")
+        var lastName = myTextField(label = "Last Name", maxChars = 20)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MyLabel(text = "Email")
 
-        var email = myTextField(label = "Email")
+        var email = myTextField(label = "Email", maxChars = 50)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
+                val message = context.getString(R.string.toast_message)
                 if (firstName.isBlank() || lastName.isBlank() || email.isBlank()) {
-                    Toast.makeText(context, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 } else {
                     with(sharedPreferences.edit()) {
                         putString("firstName", firstName)
@@ -125,11 +133,13 @@ fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferen
 }
 
 @Composable
-fun myTextField(label : String) : String {
+fun myTextField(label : String, maxChars : Int) : String {
     var text by remember { mutableStateOf("") }
     OutlinedTextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = { if (it.length <= maxChars) text = it },
+        maxLines = 1,
+        minLines = 1,
         label = { Text(label) },
         modifier = Modifier
             .fillMaxWidth()
