@@ -34,9 +34,11 @@ fun NavigationComposable(context: Context) {
 
     val startDestination = if (isLoggedIn) DestinationsImpl.Home else DestinationsImpl.OnBoarding
 
+    val (selectedCategories, setSelectedCategories) = remember { mutableStateOf(setOf<FilteredCategory>())}
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable(DestinationsImpl.OnBoarding) {  OnBoarding(navController, sharedPreferences, context) }
-        composable(DestinationsImpl.Home) { Home(navController, context) }
+        composable(DestinationsImpl.Home) { Home(navController, context, selectedCategories, setSelectedCategories) }
         composable(DestinationsImpl.Profile) { Profile(navController, sharedPreferences) }
     }
 }

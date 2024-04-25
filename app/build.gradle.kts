@@ -62,7 +62,6 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-    implementation(libs.androidx.material3.android)
     kapt("androidx.room:room-compiler:2.6.1")
 
     //Live Data
@@ -76,9 +75,16 @@ dependencies {
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
 
+    //Gson
+    implementation (libs.gson)
+
     // Glide
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
+    //Coil
+    implementation (libs.coil.compose)
+
+    implementation (libs.androidx.material)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

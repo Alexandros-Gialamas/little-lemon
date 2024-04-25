@@ -28,10 +28,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.navigation.NavController
 import com.alexandros.p.gialamas.littlelemon.DestinationsImpl
 import com.alexandros.p.gialamas.littlelemon.R
+import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonColor
 import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonTheme
 
-val backColor : Color = Color(0xFF495E57)
-val buttonColor : Color = Color(0xFFF4CE14)
+
 @Composable
 fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferences, context: Context){
     Column(
@@ -47,7 +47,7 @@ fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferen
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .background(backColor)
+                .background(LittleLemonColor.green)
                 .fillMaxWidth()
         ){
             Text(
@@ -109,7 +109,7 @@ fun OnBoarding(navController : NavController, sharedPreferences : SharedPreferen
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = buttonColor,
+                containerColor = LittleLemonColor.yellow,
                 contentColor = Color.Black),
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,8 +138,8 @@ fun myTextField(label : String) : String {
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.Transparent,
             focusedContainerColor = Color.Transparent,
-            focusedLabelColor = backColor,
-            focusedIndicatorColor = backColor
+            focusedLabelColor = LittleLemonColor.green,
+            focusedIndicatorColor = LittleLemonColor.green
         ),
     )
     return text
@@ -156,10 +156,3 @@ fun MyLabel(text : String){
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun OnBoardingPreview() {
-    LittleLemonTheme {
-//        OnBoarding()
-    }
-}

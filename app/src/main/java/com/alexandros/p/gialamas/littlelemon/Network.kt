@@ -1,28 +1,31 @@
 package com.alexandros.p.gialamas.littlelemon
+import android.content.Context
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.LifecycleCoroutineScope
+import com.alexandros.p.gialamas.littlelemon.data.MenuDatabase
 import com.alexandros.p.gialamas.littlelemon.data.MenuItemEntity
+import com.google.gson.Gson
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.KSerializer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonPrimitive
 
 @Serializable
 data class MenuNetwork(
     @SerialName("menu")
     val menu: List<MenuItemNetwork>)
+
 @Serializable
 data class MenuItemNetwork(
     @SerialName("id")
@@ -48,27 +51,29 @@ data class MenuItemNetwork(
     )
 }
 
-
-
-
-
-
 class MenuApi {
-    private val httpClient = HttpClient {
+    private val httpClient = HttpClient(Android) {
         install(ContentNegotiation) {
-            json()
+            json(Json { ignoreUnknownKeys = true }, contentType = ContentType.Any)
         }
     }
 
-    suspend fun getMenu(): List<MenuItemNetwork> {
-        val url = "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json"
-        return try {
-            val jsonString = httpClient.get(url).body<String>()
-            val menuNetwork = Json.decodeFromString<MenuNetwork>(jsonString)
-            menuNetwork.menu
-        } catch (e: Exception) {
-            emptyList()
+    suspend fun fetchMenu(): List<MenuItemNetwork> {
+        val gson = Gson()
+        val response : String = httpClient.get(
+            "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json").body()
+        val menuNetwork = gson.fromJson(response, MenuNetwork::class.java)
+        return let { menuNetwork.menu } ?: emptyList()
+    }
+
+    fun saveMenuToDatabase(context: Context, menuItemsNetwork: List<MenuItemNetwork>) {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val database = MenuDatabase.getDatabase(context)
+        val menuItemsRoom = menuItemsNetwork.map { it.passMenuToEntity() }
+        scope.launch(Dispatchers.IO) {
+            database.menuDao().insertMenu(*menuItemsRoom.toTypedArray())
         }
     }
+
 }
 

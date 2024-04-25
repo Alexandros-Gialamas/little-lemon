@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.alexandros.p.gialamas.littlelemon.DestinationsImpl
 import com.alexandros.p.gialamas.littlelemon.R
+import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonColor
 import com.alexandros.p.gialamas.littlelemon.ui.theme.LittleLemonTheme
 
 @Composable
@@ -71,7 +72,7 @@ fun Profile(navController : NavController, sharedPreferences : SharedPreferences
             }
         },
             colors = ButtonDefaults.buttonColors(
-                containerColor = buttonColor,
+                containerColor = LittleLemonColor.yellow,
                 contentColor = Color.Black),
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,10 +89,3 @@ fun Profile(navController : NavController, sharedPreferences : SharedPreferences
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    LittleLemonTheme {
-//        Profile()
-    }
-}
